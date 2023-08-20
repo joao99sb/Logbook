@@ -136,17 +136,18 @@ https://www.nesdev.org/wiki/PPU
   The palette for the background runs from VRAM $3F00 to $3F0F; the palette for the sprites runs from $3F10 to $3F1F. Each color takes up one byte.
 
 
-    Address	            Purpose
-    $3F00	              Universal background color
-    $3F01-$3F03	        Background palette 0
-    $3F05-$3F07	        Background palette 1
-    $3F09-$3F0B	        Background palette 2
-    $3F0D-$3F0F	        Background palette 3
-    $3F10	              Mirrorof universal background color
-    $3F11-$3F13	        Sprite palette 0
-    $3F15-$3F17	        Sprite palette 1
-    $3F19-$3F1B	        Sprite palette 2
-    $3F1D-$3F1F	        Sprite palette 3
+  |   Address   |  Purpose                            |
+  |:-----------:|:-----------------------------------:|
+  |$3F00	      | Universal background color          |                 
+  |$3F01-$3F03	| Background palette 0                |  
+  |$3F05-$3F07	| Background palette 1                |  
+  |$3F09-$3F0B	| Background palette 2                |  
+  |$3F0D-$3F0F	| Background palette 3                |  
+  |$3F10	      | Mirrorof universal background color |                
+  |$3F11-$3F13	| Sprite palette 0                    |
+  |$3F15-$3F17	| Sprite palette 1                    |
+  |$3F19-$3F1B	| Sprite palette 2                    |
+  |$3F1D-$3F1F	| Sprite palette 3                    |
 
   Each palette has three colors. Each 16x16 pixel area of the background can use the backdrop color and the three colors from one of the four background palettes. The choice of palette for each 16x16 pixel area is controlled by bits in the attribute table at the end of each nametable. Each sprite can use the three colors from one of the sprite palettes. The choice of palette is in attribute 2 of each sprite
   
