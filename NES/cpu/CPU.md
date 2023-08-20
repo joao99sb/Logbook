@@ -178,11 +178,11 @@ The 6502 does not have any special support of hardware devices so they must be m
   ## Transfer Instructions
   Load, store, interregister transfer
   
-  1. Load/Store Operations
-  
+  1. Load/Store Operations<br>
     These instructions transfer a single byte between memory and one of the registers. Load operations set the negative (N) and zero (Z) flags depending on the value of transferred. Store operations do not affect the flag settings.
 
   - LDA
+
     load accumulator
 
     When instruction LDA is executed by the microprocessor, data is transferred from memory to the accumulator and stored in the accumulator.
@@ -190,6 +190,7 @@ The 6502 does not have any special support of hardware devices so they must be m
     LDA affects the contents of the accumulator, does not affect the carry or overflow flags; sets the zero flag if the accumulator is zero as a result of the LDA, otherwise resets the zero flag; sets the negative flag if bit 7 of the accumulator is a 1, other­ wise resets the negative flag.
 
   - LDX
+
     load X
 
     Load the index register X from memory.
@@ -197,6 +198,7 @@ The 6502 does not have any special support of hardware devices so they must be m
     LDX does not affect the C or V flags; sets Z if the value loaded was zero, otherwise resets it; sets N if the value loaded in bit 7 is a 1; otherwise N is reset, and affects only the X register.
 
   - LDY
+
     load Y
 
     Load the index register Y from memory.
@@ -204,6 +206,7 @@ The 6502 does not have any special support of hardware devices so they must be m
     LDY does not affect the C or V flags, sets the N flag if the value loaded in bit 7 is a 1, otherwise resets N, sets Z flag if the loaded value is zero otherwise resets Z and only affects the Y register.
 
   - STA
+
     store accumulator
 
     This instruction transfers the contents of the accumulator to memory.
@@ -211,6 +214,7 @@ The 6502 does not have any special support of hardware devices so they must be m
     This instruction affects none of the flags in the processor status register and does not affect the accumulator.
 
   - STX
+
     store X
 
     Transfers value of X register to addressed memory location.
@@ -218,6 +222,7 @@ The 6502 does not have any special support of hardware devices so they must be m
     No flags or registers in the microprocessor are affected by the store operation.
 
   - STY
+
     store Y
     
     Transfer the value of the Y register to the addressed memory location.
@@ -226,38 +231,41 @@ The 6502 does not have any special support of hardware devices so they must be m
 
   
   
-  2. Register Transfers
+  2. Register Transfers<br>
+  The contents of the X and Y registers can be moved to or from the accumulator, setting the negative (N) and zero (Z) flags as appropriate.
     
-    The contents of the X and Y registers can be moved to or from the accumulator, setting the negative (N) and zero (Z) flags as appropriate.
+  - TAX
+
+    transfer accumulator to X
+
+    This instruction takes the value from accumulator A and trans­ fers or loads it into the index register X without disturbing the content of the accumulator A.
+
+    TAX only affects the index register X, does not affect the carry or overflow flags. The N flag is set if the resultant value in the index register X has bit 7 on, otherwise N is reset. The Z bit is set if the content of the register X is 0 as aresult of theopera­ tion, otherwise it is reset.
+
+
+  - TAY
+
+    transfer accumulator to Y
+
+    This instruction moves the value of the accumulator into index register Y without affecting the accumulator.
+
+    TAY instruction only affects the Y register and does not affect either the carry or overflow flags. If the index register Y has bit 7 on, then N is set, otherwise it is reset. If the content of the index register Y equals 0 as a result of the operation, Z is set on, otherwise it is reset.
+
+  - TXA
+
+    transfer X to accumulator
+
+    This instruction moves the value that is in the index register X to the accumulator A without disturbing the content of the index register X.
+
+    TXA does not affect any register other than the accumula­tor and does not affect the carry or overflow flag. If the result in A has bit 7 on, then the N flag is set, otherwise it is reset. If the resultant value in the accumulator is 0, then the Z flag is set, other­ wise it is reset.
     
-    - TAX
-      transfer accumulator to X
+  - TYA
 
-      This instruction takes the value from accumulator A and trans­ fers or loads it into the index register X without disturbing the content of the accumulator A.
+    transfer Y to accumulator
+    
+    This instruction moves the value that is in the index register Y to accumulator A without disturbing the content of the register Y.
 
-      TAX only affects the index register X, does not affect the carry or overflow flags. The N flag is set if the resultant value in the index register X has bit 7 on, otherwise N is reset. The Z bit is set if the content of the register X is 0 as aresult of theopera­ tion, otherwise it is reset.
-
-
-    - TAY
-      transfer accumulator to Y
-
-      This instruction moves the value of the accumulator into index register Y without affecting the accumulator.
-
-      TAY instruction only affects the Y register and does not affect either the carry or overflow flags. If the index register Y has bit 7 on, then N is set, otherwise it is reset. If the content of the index register Y equals 0 as a result of the operation, Z is set on, otherwise it is reset.
-
-    - TXA
-      transfer X to accumulator
-
-      This instruction moves the value that is in the index register X to the accumulator A without disturbing the content of the index register X.
-
-      TXA does not affect any register other than the accumula­tor and does not affect the carry or overflow flag. If the result in A has bit 7 on, then the N flag is set, otherwise it is reset. If the resultant value in the accumulator is 0, then the Z flag is set, other­ wise it is reset.
-      
-    - TYA
-      transfer Y to accumulator
-      
-      This instruction moves the value that is in the index register Y to accumulator A without disturbing the content of the register Y.
-
-      TYA does not affect any other register other than the accumula­ tor and does not affect the carry or overflow flag. If the result in the accumulator A has bit 7 on, the N flag is set, otherwise it is reset. If the resultant value in the accumulator A is 0, then the Z flag is set, otherwise it is reset.
+    TYA does not affect any other register other than the accumula­ tor and does not affect the carry or overflow flag. If the result in the accumulator A has bit 7 on, the N flag is set, otherwise it is reset. If the resultant value in the accumulator A is 0, then the Z flag is set, otherwise it is reset.
     
     
   ## Stack Instructions
@@ -265,6 +273,7 @@ The 6502 does not have any special support of hardware devices so they must be m
   (When a byte is pushed onto the stack, it will be stored in the address indicated by the value currently in the stack pointer, which will be then decremented by 1. Conversely, when a value is pulled from the stack, the stack pointer is incremented. The stack pointer is accessible by the TSX and TXS instructions.)
 
   - TXS
+
     transfer X to stack pointer
 
     This instruction transfers the value in the index register X to the stack pointer.
@@ -274,6 +283,7 @@ The 6502 does not have any special support of hardware devices so they must be m
 
 
   - TSX
+
     transfer stack pointer to X
 
     This instruction transfers the value in the stack pointer to the index register X.
@@ -281,6 +291,7 @@ The 6502 does not have any special support of hardware devices so they must be m
     TSX does not affect the carry or overflow flags. It sets N if bit 7 is on in index X as a result of the instruction, otherwise it is reset. If index X is zero as a result of the TSX, the Z flag is set, other­ wise it is reset. TSX changes the value of index X, making it equal to the content of the stack pointer.
 
   - PHA
+
     push accumulator
 
     This instruction transfers the current value of the accumulator to the next location on the stack, automatically decrementing the stack to point to the next empty location.
@@ -288,6 +299,7 @@ The 6502 does not have any special support of hardware devices so they must be m
     The Push A instruction only affects the stack pointer register which is decremented by 1 as a result of the operation. It affects no flags.
 
   - PHP
+
     push processor status register (with break flag set)
 
     This instruction transfers the contents of the processor status reg­ ister unchanged to the stack, as governed by the stack pointer.
@@ -295,6 +307,7 @@ The 6502 does not have any special support of hardware devices so they must be m
     The PHP instruction affects no registers or flags in the micropro­cessor.
 
   - PLA
+
     pull accumulator
 
     This instruction adds 1 to the current value of the stack pointer and uses it to address the stack and loads the contents of the stack into the A register.
@@ -302,6 +315,7 @@ The 6502 does not have any special support of hardware devices so they must be m
     The PLA instruction does not affect the carry or overflow flags. It sets N if the bit 7 is on in accumulator A as a result of instructions, otherwise it is reset. If accumulator A is zero as a result of the PLA, then the Z flag is set, otherwise it is reset. The PLA instruction changes content of the accumulator A to the contents of the memory location at stack register plus 1 and also increments the stack register.
 
   - PLP
+
     pull processor status register 
     
     This instruction transfers the next value on the stack to the Proces­ sor Status register, thereby changing all of the flags and setting the mode switches to the values from the stack.
@@ -314,6 +328,7 @@ The 6502 does not have any special support of hardware devices so they must be m
   The following instructions perform logical operations on the contents of the accumulator and another value held in memory. The BIT instruction performs a logical AND to test the presence of bits in the memory value to set the flags but does not keep the result.
 
   - AND
+  
     and (with accumulator)
 
     The AND instruction transfer the accumulator and memory to the adder which performs a bit-by-bit AND operation and stores the result back in the accumulator.
@@ -321,6 +336,7 @@ The 6502 does not have any special support of hardware devices so they must be m
     This instruction affects the accumulator; sets the zero flag if the result in the accumulator is 0, otherwise resets the zero flag; sets the negative flag if the result in the accumulator has bit 7 on, otherwise resets the
 
   - EOR
+
     exclusive or (with accumulator)
 
     The EOR instruction transfers the memory and the accumulator to the adder which performs a binary "EXCLUSIVE OR" on a bit-by-bit basis and stores the result in the accumulator.
@@ -328,6 +344,7 @@ The 6502 does not have any special support of hardware devices so they must be m
     This instruction affects the accumulator; sets the zero flag if the result in the accumulator is 0, otherwise resets the zero flag sets the negative flag if the result in the accumulator has bit 7 on, otherwise resets the negative flag.
 
   - ORA
+  
     (inclusive) or with accumulator
     The ORA instruction transfers the memory and the accumulator to the adder which performs a binary "OR" on a bit-by-bit basis and stores the result in the accumulator.
 
@@ -715,7 +732,7 @@ The 6502 does not have any special support of hardware devices so they must be m
 
   Absolute addresses are also used for the jump instructions JMP and JSR to provide the address for the next instruction to continue with in the control flow.
 
-    Mnemonic          Instruction         Data
+    Mnemonic          Instruction     Data
                        __ __ __               __
     LDA #3010         |AD|10|30|      $3010: |34|
                                               ||
