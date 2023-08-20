@@ -314,26 +314,28 @@ https://www.nesdev.org/wiki/PPU
 
   The NES has 2kB of RAM dedicated to the PPU, normally mapped to the nametable address space from $2000-2FFF, but this can be rerouted through custom cartridge wiring.
 
-    Address range 	Size	    Description
-    $0000-$0FFF	    $1000   	Pattern table 0
-    $1000-$1FFF	    $1000   	Pattern table 1
-    $2000-$23FF	    $0400   	Nametable 0
-    $2400-$27FF	    $0400   	Nametable 1
-    $2800-$2BFF	    $0400   	Nametable 2
-    $2C00-$2FFF	    $0400   	Nametable 3
-    $3000-$3EFF	    $0F00   	Mirrors of $2000-$2EFF
-    $3F00-$3F1F	    $0020   	Palette RAM indexes
-    $3F20-$3FFF	    $00E0   	Mirrors of $3F00-$3F1F
+  |Address range| Size  |       Description      |
+  |:-----------:|:-----:|:----------------------:|
+  |$0000-$0FFF	| $1000 | Pattern table 0        |
+  |$1000-$1FFF	| $1000 | Pattern table 1        | 
+  |$2000-$23FF	| $0400 | Nametable 0            |
+  |$2400-$27FF	| $0400 | Nametable 1            | 
+  |$2800-$2BFF	| $0400 | Nametable 2            |
+  |$2C00-$2FFF	| $0400 | Nametable 3            | 
+  |$3000-$3EFF	| $0F00 | Mirrors of $2000-$2EFF |
+  |$3F00-$3F1F	| $0020 | Palette RAM indexes    |
+  |$3F20-$3FFF	| $00E0 | Mirrors of $3F00-$3F1F |
 
   In addition, the PPU internally contains 256 bytes of memory known as Object Attribute Memory which determines how sprites are rendered. The CPU can manipulate this memory through memory mapped registers at OAMADDR ($2003), OAMDATA ($2004), and OAMDMA ($4014). OAM can be viewed as an array with 64 entries. Each entry has 4 bytes: the sprite Y coordinate, the sprite tile number, the sprite attribute, and the sprite X coordinate.
 
 
   
-    Address Low Nibble	    Description
-    $00,$04,$08,$0C	        Sprite Y coordinate
-    $01,$05,$09,$0D	        Sprite tile #
-    $02,$06,$0A,$0E	        Sprite attribut
-    $03,$07,$0B,$0F	        Sprite X coordiat
+  |Address Low Nibble |	 Description       |
+  |:-----------------:|:------------------:|
+  |$00,$04,$08,$0C	  |Sprite Y coordinate |
+  |$01,$05,$09,$0D	  |Sprite tile #       |
+  |$02,$06,$0A,$0E	  |Sprite attribut     |
+  |$03,$07,$0B,$0F	  |Sprite X coordiat   |
 
   ## Hardware mapping
   The mappings above are the fixed addresses from which the PPU uses to fetch data during rendering. The actual device that the PPU fetches data from, however, may be configured by the cartridge.
