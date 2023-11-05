@@ -1,0 +1,8 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^  ~~~~
+main.c:26:7: error: conflicting types for 'my_fgets'
+char *my_fgets(char *buffer, int size, FILE *stream) {
+^
+main.c:15:12: note: previous implicit declaration is here
+while (my_fgets(buffer, sizeof(buffer), file) != NULL) {
+^
+2 warnings and 1 error generated.
