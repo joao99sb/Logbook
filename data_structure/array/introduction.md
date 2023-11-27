@@ -13,9 +13,9 @@ Arrays are a list of elements of the same type.
    ^ ^ ^ ^ ^  
     200/1 202/3 204/5 206/7 208/9
 
-addr(A[3]) = 200 + 8\*3 = 224 // addr = address;
+addr(A[3]) = 200 + 2*3 = 206 // addr = address;
 
-addr(A[i]) = L0 + i\*w // L0 = address of first element
+addr(A[i]) = L0 + i*w // L0 = address of first element
 // i = index
 // w = size of data type
 
@@ -67,7 +67,7 @@ c = lower bound
 d = upper bound
 
 exemple of 4 dimention:
-addr(A[i1][i2][i3][i4]) = L0 + [i1*d2*d3*d4 + i2*d3*d4 + i3*d4 + i4]\*w
+addr(A[i1][i2][i3][i4]) = L0 + [i1*d2*d3*d4 + i2*d3*d4 + i3*d4 + i4]*w
 /\ /\ /\ /\
  3 2 1 0 multiplications
 
