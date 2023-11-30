@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/Array.dir/src/main.c.o -o Array 
