@@ -1,0 +1,3 @@
+/home/joao/code/logbook/data_structure/array/code/build/CMakeFiles/Array.dir
+/home/joao/code/logbook/data_structure/array/code/build/CMakeFiles/edit_cache.dir
+/home/joao/code/logbook/data_structure/array/code/build/CMakeFiles/rebuild_cache.dir

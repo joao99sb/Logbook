@@ -95,7 +95,7 @@ void appendArray(Array *arr, int x)
 void insertArray(Array *arr, int index, int x)
 {
   verifyArray(*arr);
-  
+
   if (arr->length + 1 > arr->size)
   {
     abort();
@@ -114,6 +114,23 @@ void insertArray(Array *arr, int index, int x)
     arr->length++;
   }
 }
+
+
+int  delete(Array *arr,int index){
+  int x=0;
+  int i;
+  if(index =>0 && index < arr->length ){
+    x = arr->A[index];
+    for ( i =index; i< arr->length -1; i++){
+      arr->A[i]= arr->A[i+1];
+    }
+    arr->length--;
+    return x;
+  }
+
+  return 0;
+}
+
 
 int main(int argc, char *argv[]) {
 

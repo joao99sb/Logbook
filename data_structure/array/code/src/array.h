@@ -122,3 +122,24 @@ void insertArray(Array *arr, int index, int x)
     arr->length++;
   }
 }
+
+int deleteArrayElement(Array *arr, int index)
+{
+  verifyArray(*arr);
+  if (index < 0 || index > arr->length)
+  {
+    printf("Error: Invalid index\n");
+    abort();
+  }
+
+  int x = 0;
+  int i;
+
+  x = arr->A[index];
+  for (i = index; i < arr->length - 1; i++)
+  {
+    arr->A[i] = arr->A[i + 1];
+  }
+  arr->length--;
+  return x;
+}

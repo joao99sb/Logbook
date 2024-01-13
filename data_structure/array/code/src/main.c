@@ -24,5 +24,16 @@ int main(int argc, char const *argv[])
   insertArray(&arr, i, n);
 
   displayArrayElements(&arr);
+
+  printf("Enter a index delete this array's element \n");
+
+  printf("index: ");
+  scanf("%d", &i);
+  int elementDeleted = deleteArrayElement(&arr, 2);
+  printf("element deleted:");
+  printf("%d\n", elementDeleted);
+
+  displayArrayElements(&arr);
+
   return 0;
 }
