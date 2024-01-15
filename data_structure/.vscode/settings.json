@@ -3,7 +3,9 @@
     "bitset": "c",
     "string_view": "c",
     "chrono": "c",
-    "variant": "c"
+    "variant": "c",
+    "string.h": "c",
+    "linked_list.h": "c"
   },
   "cmake.configureOnOpen": false
 }

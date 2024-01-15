@@ -21,7 +21,63 @@ Operations:
 9. reverse()
 10. shift()/rotate()
 
-exemple
+## Search
+
+- Linear search
+
+  A = [8,9,4,5,3,6,28,7,6,5]
+
+  key = 5
+
+  search item by item and compare the vules
+
+  for(i=0;i<length; i++){
+    if (key == A[i]){
+      return i;
+    }
+
+  }
+  return -1;
+
+  Best = O(1)
+  Worst = O(n)
+
+  Avarege case:
+
+  (1 comp for first el + 2 comp for sec ele + ... + n comp for n el)/ (number of cases = n ) = (n(n+1))/(n2) = (n+1)/2
+
+  Avg = O((n+1)/2) = O(n)
+
+- binary search
+
+  first of all, binary search only makes sense in a sorted array
+  A = [1,2,3,4,5,6,7,8,9,10,11]
+
+  key = 8
+
+  first, take the medium element
+
+  med = (0 + 10)/2 = 5
+  A[5] = 6, not the key elemente
+
+  as the medium element is lower then the key element, then we take another med, but in this case, in upper half
+
+  med2 = (6 + 10)/2 = 8
+  A[8]= 9
+
+  we do another search
+
+  med3 = (6 + 8)/2 = 7
+  A[7]=8
+
+ we found the key element
+
+  Best = O(1)
+  Worst = O(log(n))
+
+  Avarege case:
+
+# Exemple
 
 ```C
 #include <stdio.h>
@@ -129,6 +185,28 @@ int  delete(Array *arr,int index){
   }
 
   return 0;
+}
+
+int binarySearch(Array *arr, int key){
+
+  int low, mid, high;
+  low = 0;
+  high = arr->length-1;
+
+
+  while(low<=high){
+    mid = (low+high)/2;
+    if (key==arr->A[mid]) return mid
+    if (key < arr->A[mid]){
+      high =mid -1;
+    }else{
+      lower = mid+1;
+    }
+  }
+
+
+
+  return -1
 }
 
 
