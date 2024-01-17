@@ -23,13 +23,11 @@ void verifyArray(Array arr)
 Array createArray(void)
 {
   Array arr;
-
-  arr.A = (int *)malloc(arr.size * sizeof(int));
-  arr.length = 0;
-
   printf("Enter size of an Array\n");
 
   scanf("%d", &arr.size);
+  arr.A = (int *)malloc(arr.size * sizeof(int));
+  arr.length = 0;
 
   printf("Enter number of numbers in an Array\n");
   int n;
