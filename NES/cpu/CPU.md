@@ -1,10 +1,11 @@
 # ref
 
-- https://www.nesdev.org/wiki/CPU
-- https://www.pagetable.com/c64ref/6502/
-- https://www.masswerk.at/6502/6502_instruction_set.html
+- <https://www.nesdev.org/wiki/CPU>
+- <https://www.pagetable.com/c64ref/6502/>
+- <https://www.masswerk.at/6502/6502_instruction_set.html>
 
 # Architecture
+
 The 6502 microprocessor is a relatively simple 8 bit CPU with only a few internal registers capable of addressing at most 64Kb of memory via its 16 bit address bus. The processor is little endian and expects addresses to be stored in memory least significant byte first.
 
 The first 256 byte page of memory ($0000-$00FF) is referred to as 'Zero Page' and is the focus of a number of special addressing modes that result in shorter (and quicker) instructions or allow indirect access to the memory. The second page of memory ($0100-$01FF) is reserved for the system stack and which cannot be relocated.
@@ -15,7 +16,8 @@ The 6502 does not have any special support of hardware devices so they must be m
 
 # Registers
 
-  ## PC Program Counter
+## PC Program Counter
+
   This register points the address from which the next instruction
   byte (opcode or parameter) will be fetched. Unlike other
   registers, this one is 16 bits in length. The low and high 8-bit
@@ -24,7 +26,8 @@ The 6502 does not have any special support of hardware devices so they must be m
   This can be done either by jumping to a subroutine or by causing
   an interrupt.
 
-  ##  S Stack pointer
+##  S Stack pointer
+
   The NMOS 65xx processors have 256 bytes of stack memory, ranging
   from $0100 to $01FF. The S register is a 8-bit offset to the stack
   page. In other words, whenever anything is being pushed on the
@@ -33,7 +36,8 @@ The 6502 does not have any special support of hardware devices so they must be m
   to or from the index register X (see below) with the TSX and TXS
   instructions.
 
-  ## P Processor status
+## P Processor status
+
   This 8-bit register stores the state of the processor. The bits in
   this register are called flags. Most of the flags have something
   to do with arithmetic operations.
@@ -44,8 +48,9 @@ The 6502 does not have any special support of hardware devices so they must be m
   pulling the P register from stack or by using the flag set or
   clear instructions.
 
-  ### Following is a list of the flags, starting from the 8th bit of the P register (bit 7, value $80):
-  - N Negative flag
+### Following is a list of the flags, starting from the 8th bit of the P register (bit 7, value $80)
+
+- N Negative flag
         This flag will be set after any arithmetic operations
         (when any of the registers A, X or Y is being loaded
         with a value). Generally, the N flag will be copied from
@@ -56,7 +61,7 @@ The 6502 does not have any special support of hardware devices so they must be m
         the Negative flag just like arithmetic operations.
         Finally, the Negative flag behaves differently in
         Decimal operations (see description below).
-  - V oVerflow flag
+- V oVerflow flag
         Like the Negative flag, this flag is intended to be used
         with 8-bit signed integer numbers. The flag will be
         affected by addition and subtraction, the instructions
@@ -93,7 +98,7 @@ The 6502 does not have any special support of hardware devices so they must be m
         by arithmetic operations, not cleared.
     1 unused flag
         To the current knowledge, this flag is always 1.
-  - B Break flag
+- B Break flag
         This flag is used to distinguish software (BRK)
         interrupts from hardware interrupts (IRQ or NMI). The B
         flag is always set except when the P register is being
@@ -106,7 +111,7 @@ The 6502 does not have any special support of hardware devices so they must be m
         executing a BRK instruction, the processor will jump to
         the NMI vector ($FFFA), and the P register will be
         pushed on the stack with the B flag set.
-  - D Decimal mode flag
+- D Decimal mode flag
         This flag is used to select the (Binary Coded) Decimal
         mode for addition and subtraction. In most applications,
         the flag is zero.
@@ -114,7 +119,7 @@ The 6502 does not have any special support of hardware devices so they must be m
         The Decimal mode has many oddities, and it operates
         differently on CMOS processors. See the description of
         the ADC, SBC and ARR instructions below.
-    I Interrupt disable flag
+- I Interrupt disable flag
         This flag can be used to prevent the processor from
         jumping to the IRQ handler vector ($FFFE) whenever the
         hardware line -IRQ is active. The flag will be
@@ -122,13 +127,13 @@ The 6502 does not have any special support of hardware devices so they must be m
         processor would not keep jumping to the interrupt
         routine if the -IRQ signal remains low for several clock
         cycles.
-  - Z Zero flag
+- Z Zero flag
         The Zero flag will be affected in the same cases than
         the Negative flag. Generally, it will be set if an
         arithmetic register is being loaded with the value zero,
         and cleared otherwise. The flag will behave differently
         in Decimal operations.
-  - C Carry flag
+- C Carry flag
         This flag is used in additions, subtractions,
         comparisons and bit rotations. In additions and
         subtractions, it acts as a 9th bit and lets you to chain
@@ -147,48 +152,47 @@ The 6502 does not have any special support of hardware devices so they must be m
         ASL always clears it. Similarly, the ROR and LSR
         instructions shift to the right.
 
-  ## A Accumulator
+## A Accumulator
+
   The accumulator is the main register for arithmetic and logic
   operations. Unlike the index registers X and Y, it has a direct
   connection to the Arithmetic and Logic Unit (ALU). This is why
   many operations are only available for the accumulator, not the
   index registers.
 
-  ## X Index register X
+## X Index register X
+
   This is the main register for addressing data with indices. It has
   a special addressing mode, indexed indirect, which lets you to
   have a vector table on the zero page.
 
-  ## Y Index register Y
+## Y Index register Y
+
   The Y register has the least operations available. On the other
   hand, only it has the indirect indexed addressing mode that
   enables access to any memory place without having to use
   self-modifying code.
 
-
-
-
 ************
 
-
-
 # Instruction
+
   The 6502 has a relatively basic set of instructions, many having similar functions (e.g. memory access, arithmetic, etc.). The following sections list the complete set of 56 instructions in functional groups.
 
   OBS:
     * add 1 to cycles if page boundary is crossed
-    
+
     ** add 1 to cycles if branch occurs on same page
        add 2 to cycles if branch occurs to different page
 
+## Transfer Instructions
 
-  ## Transfer Instructions
   Load, store, interregister transfer
   
   1. Load/Store Operations<br>
     These instructions transfer a single byte between memory and one of the registers. Load operations set the negative (N) and zero (Z) flags depending on the value of transferred. Store operations do not affect the flag settings.
 
-  - LDA
+- LDA
 
     load accumulator
 
@@ -199,19 +203,18 @@ The 6502 does not have any special support of hardware devices so they must be m
         M -> A                                   N Z C I D V
                                                  + + - - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | immediate   |  LDA #oper   | A9  |   2   |   2    | 
-    | zeropage    |  LDA oper    | A5  |   2   |   3    | 
-    | zeropage,X  |  LDA oper,X  | B5  |   2   |   4    | 
-    | absolute    |  LDA oper    | AD  |   3   |   4    | 
-    | absolute,X  |  LDA oper,X  | BD  |   3   |   4*   | 
-    | absolute,Y  |  LDA oper,Y  | B9  |   3   |   4*   | 
-    | (indirect,X)|  LDA (oper,X)| A1  |   2   |   6    | 
-    | (indirect),Y|  LDA (oper),Y| B1  |   2   |   5*   | 
+    | immediate   |  LDA #oper   | A9  |   2   |   2    |
+    | zeropage    |  LDA oper    | A5  |   2   |   3    |
+    | zeropage,X  |  LDA oper,X  | B5  |   2   |   4    |
+    | absolute    |  LDA oper    | AD  |   3   |   4    |
+    | absolute,X  |  LDA oper,X  | BD  |   3   |   4*   |
+    | absolute,Y  |  LDA oper,Y  | B9  |   3   |   4*   |
+    | (indirect,X)|  LDA (oper,X)| A1  |   2   |   6    |
+    | (indirect),Y|  LDA (oper),Y| B1  |   2   |   5*   |
 
-  - LDX
+- LDX
 
     load X
 
@@ -222,17 +225,15 @@ The 6502 does not have any special support of hardware devices so they must be m
         M -> X                                   N Z C I D V
                                                  + + - - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | immediate   |  LDX #oper   | A2  |   2   |   2    | 
-    | zeropage    |  LDX oper    | A6  |   2   |   3    | 
-    | zeropage,Y  |  LDX oper,Y  | B6  |   2   |   4    | 
-    | absolute    |  LDX oper    | AE  |   3   |   4    | 
-    | absolute,Y  |  LDX oper,Y  | BE  |   3   |   4*   | 
+    | immediate   |  LDX #oper   | A2  |   2   |   2    |
+    | zeropage    |  LDX oper    | A6  |   2   |   3    |
+    | zeropage,Y  |  LDX oper,Y  | B6  |   2   |   4    |
+    | absolute    |  LDX oper    | AE  |   3   |   4    |
+    | absolute,Y  |  LDX oper,Y  | BE  |   3   |   4*   |
 
-
-  - LDY
+- LDY
 
     load Y
 
@@ -243,16 +244,15 @@ The 6502 does not have any special support of hardware devices so they must be m
         M -> Y                                   N Z C I D V
                                                  + + - - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | immediate   |  LDY #oper   | A0  |   2   |   2    | 
-    | zeropage    |  LDY oper    | A4  |   2   |   3    | 
-    | zeropage,X  |  LDY oper,X  | B4  |   2   |   4    | 
-    | absolute    |  LDY oper    | AC  |   3   |   4    | 
-    | absolute,X  |  LDY oper,X  | BC  |   3   |   4*   | 
+    | immediate   |  LDY #oper   | A0  |   2   |   2    |
+    | zeropage    |  LDY oper    | A4  |   2   |   3    |
+    | zeropage,X  |  LDY oper,X  | B4  |   2   |   4    |
+    | absolute    |  LDY oper    | AC  |   3   |   4    |
+    | absolute,X  |  LDY oper,X  | BC  |   3   |   4*   |
 
-  - STA
+- STA
 
     store accumulator
 
@@ -263,18 +263,17 @@ The 6502 does not have any special support of hardware devices so they must be m
         A -> M                                   N Z C I D V
                                                  - - - - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | zeropage    |  STA oper    | 85  |   2   |   3    | 
-    | zeropage,X  |  STA oper,X  | 95  |   2   |   4    | 
-    | absolute    |  STA oper    | 8D  |   3   |   4    | 
-    | absolute,X  |  STA oper,X  | 9D  |   3   |   5    | 
-    | absolute,Y  |  STA oper,Y  | 99  |   3   |   5    | 
-    | (indirect,X)|  STA (oper,X)| 81  |   2   |   6    | 
-    | (indirect,Y)|  STA (oper),X| 91  |   2   |   6    | 
+    | zeropage    |  STA oper    | 85  |   2   |   3    |
+    | zeropage,X  |  STA oper,X  | 95  |   2   |   4    |
+    | absolute    |  STA oper    | 8D  |   3   |   4    |
+    | absolute,X  |  STA oper,X  | 9D  |   3   |   5    |
+    | absolute,Y  |  STA oper,Y  | 99  |   3   |   5    |
+    | (indirect,X)|  STA (oper,X)| 81  |   2   |   6    |
+    | (indirect,Y)|  STA (oper),X| 91  |   2   |   6    |
 
-  - STX
+- STX
 
     store X
 
@@ -285,19 +284,16 @@ The 6502 does not have any special support of hardware devices so they must be m
         X -> M                                   N Z C I D V
                                                  - - - - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | zeropage    |  STX oper    | 86  |   2   |   3    | 
-    | zeropage,Y  |  STX oper,Y  | 96  |   2   |   4    | 
-    | absolute    |  STX oper    | 8E  |   3   |   4    | 
+    | zeropage    |  STX oper    | 86  |   2   |   3    |
+    | zeropage,Y  |  STX oper,Y  | 96  |   2   |   4    |
+    | absolute    |  STX oper    | 8E  |   3   |   4    |
 
-
-
-  - STY
+- STY
 
     store Y
-    
+
     Transfer the value of the Y register to the addressed memory location.
 
     STY does not affect any flags or registers in the microprocessor.
@@ -305,19 +301,16 @@ The 6502 does not have any special support of hardware devices so they must be m
         Y -> M                                   N Z C I D V
                                                  - - - - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | zeropage    |  STY oper    | 84  |   2   |   3    | 
-    | zeropage,X  |  STY oper,X  | 94  |   2   |   4    | 
-    | absolute    |  STY oper    | 8C  |   3   |   4    | 
+    | zeropage    |  STY oper    | 84  |   2   |   3    |
+    | zeropage,X  |  STY oper,X  | 94  |   2   |   4    |
+    | absolute    |  STY oper    | 8C  |   3   |   4    |
 
-  
-  
   2. Register Transfers<br>
   The contents of the X and Y registers can be moved to or from the accumulator, setting the negative (N) and zero (Z) flags as appropriate.
-    
-  - TAX
+
+- TAX
 
     transfer accumulator to X
 
@@ -328,13 +321,11 @@ The 6502 does not have any special support of hardware devices so they must be m
         A -> M                                   N Z C I D V
                                                  + + - - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    |  implied    |     TAX      | AA  |   1   |   2    | 
+    |  implied    |     TAX      | AA  |   1   |   2    |
 
-
-  - TAY
+- TAY
 
     transfer accumulator to Y
 
@@ -345,44 +336,39 @@ The 6502 does not have any special support of hardware devices so they must be m
         A -> Y                                   N Z C I D V
                                                  + + - - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    |  implied    |     TAY      | A8  |   1   |   2    | 
+    |  implied    |     TAY      | A8  |   1   |   2    |
 
-
-  - TXA
+- TXA
 
     transfer X to accumulator
 
     This instruction moves the value that is in the index register X to the accumulator A without disturbing the content of the index register X.
 
     TXA does not affect any register other than the accumula­tor and does not affect the carry or overflow flag. If the result in A has bit 7 on, then the N flag is set, otherwise it is reset. If the resultant value in the accumulator is 0, then the Z flag is set, other­ wise it is reset.
-    
-  - TYA
+
+- TYA
 
     transfer Y to accumulator
-    
+
     This instruction moves the value that is in the index register Y to accumulator A without disturbing the content of the register Y.
 
     TYA does not affect any other register other than the accumula­ tor and does not affect the carry or overflow flag. If the result in the accumulator A has bit 7 on, the N flag is set, otherwise it is reset. If the resultant value in the accumulator A is 0, then the Z flag is set, otherwise it is reset.
 
-
         Y -> A                                   N Z C I D V
                                                  + + - - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    |  implied    |     TYA      | 98  |   1   |   2    | 
-    
-    
-    
-  ## Stack Instructions
+    |  implied    |     TYA      | 98  |   1   |   2    |
+
+## Stack Instructions
+
   These instructions transfer the accumulator or status register (flags) to and from the stack. The processor stack is a last-in-first-out (LIFO) stack of 256 bytes length, implemented at addresses $0100 - $01FF. The stack grows down as new values are pushed onto it with the current insertion point maintained in the stack pointer register.
   (When a byte is pushed onto the stack, it will be stored in the address indicated by the value currently in the stack pointer, which will be then decremented by 1. Conversely, when a value is pulled from the stack, the stack pointer is incremented. The stack pointer is accessible by the TSX and TXS instructions.)
 
-  - TXS
+- TXS
 
     transfer X to stack pointer
 
@@ -393,15 +379,11 @@ The 6502 does not have any special support of hardware devices so they must be m
         X -> SP                                  N Z C I D V
                                                  - - - - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    |  implied    |     TXS      | 9A  |   1   |   2    | 
+    |  implied    |     TXS      | 9A  |   1   |   2    |
 
-
-
-
-  - TSX
+- TSX
 
     transfer stack pointer to X
 
@@ -412,13 +394,11 @@ The 6502 does not have any special support of hardware devices so they must be m
         SP -> X                                  N Z C I D V
                                                  + + - - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    |  implied    |     TSX      | BA  |   1   |   2    | 
+    |  implied    |     TSX      | BA  |   1   |   2    |
 
-
-  - PHA
+- PHA
 
     push accumulator
 
@@ -426,7 +406,7 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     The Push A instruction only affects the stack pointer register which is decremented by 1 as a result of the operation. It affects no flags.
 
-  - PHP
+- PHP
 
     push processor status register (with break flag set)
 
@@ -441,7 +421,7 @@ The 6502 does not have any special support of hardware devices so they must be m
     |:-----------:|:------------:|:---:|:-----:|:------:|
     |  implied    |     PHP      | 08  |   1   |   3    |
 
-  - PLA
+- PLA
 
     pull accumulator
 
@@ -456,14 +436,13 @@ The 6502 does not have any special support of hardware devices so they must be m
     |:-----------:|:------------:|:---:|:-----:|:------:|
     |  implied    |     PLA      | 68  |   1   |   4    |
 
-  - PLP
+- PLP
 
-    pull processor status register 
-    
+    pull processor status register
+
     This instruction transfers the next value on the stack to the Proces­ sor Status register, thereby changing all of the flags and setting the mode switches to the values from the stack.
 
     The PLP instruction affects no registers in the processor other than the status register. **This instruction could affect all flags in the status register**.
-
 
         pull SR                                  N Z C I D V
                                                  from the stack
@@ -472,10 +451,9 @@ The 6502 does not have any special support of hardware devices so they must be m
     |:-----------:|:------------:|:---:|:-----:|:------:|
     |  implied    |     PLP      | 28  |   1   |   4    |
 
+## Decrements & Increments
 
-  ## Decrements & Increments
-
-  - DEC
+- DEC
     Decrement Memory By One
 
     This instruction subtracts 1, in two's complement, from the contents of the addressed memory location.
@@ -485,71 +463,59 @@ The 6502 does not have any special support of hardware devices so they must be m
         M - 1 -> M                               N Z C I D V
                                                  + + - - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | zeropage    | DEC oper     | C6  |   2   |   5    |   
-    | zeropage,X	| DEC oper,X   | D6  |   2   |   6    |
-    | absolute	  | DEC oper  	 | CE	 |   3   |   6    |  
-    | absolute,X	| DEC oper,X	 | DE	 |   3   |   7    |  
+    | zeropage    | DEC oper     | C6  |   2   |   5    |
+    | zeropage,X | DEC oper,X   | D6  |   2   |   6    |
+    | absolute   | DEC oper    | CE  |   3   |   6    |  
+    | absolute,X | DEC oper,X  | DE  |   3   |   7    |  
 
-
-  - DEX
+- DEX
     Decrement Index Register X By One
 
     This instruction subtracts one from the current value of the index register X and stores the result in the index register X.
 
     DEX does not affect the carry or overflow flag, it sets the N flag if it has bit 7 on as a result of the decrement, otherwise it resets the N flag; sets the Z flag if X is a 0 as a result of the decrement, otherwise it resets the Z flag.
 
-
         x - 1 -> x                               N Z C I D V
                                                  + + - - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | implied     |     DEX      | CA  |   1   |   2    | 
+    | implied     |     DEX      | CA  |   1   |   2    |
 
-  
-  - DEY
+- DEY
     Decrement Index Register Y By One
 
     This instruction subtracts one from the current value in the in­ dex register Y and stores the result into the index register Y. The result does not affect or consider carry so that the value in the index register Y is decremented to 0 and then through 0 to FF.
 
     Decrement Y does not affect the carry or overflow flags; if the Y register contains bit 7 on as a result of the decrement the N flag is set, otherwise the N flag is reset. If the Y register is 0 as a result of the decrement, the Z flag is set otherwise the Z flag is reset. This instruction only affects the index register Y.
 
-
         x - 1 -> x                               N Z C I D V
                                                  + + - - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | implied     |     DEY      |  88 |   1   |   2    | 
+    | implied     |     DEY      |  88 |   1   |   2    |
 
-
-  - INC 
+- INC
     Increment Memory By One
 
     This instruction adds 1 to the contents of the addressed memory loca­tion.
 
     The increment memory instruction does not affect any internal registers and does not affect the carry or overflow flags. If bit 7 is on as the result of the increment,N is set, otherwise it is reset; if the increment causes the result to become 0, the Z flag is set on, otherwise it is reset.
 
-
         M + 1 -> M                               N Z C I D V
                                                  + + - - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | zeropage  	| INC oper     | E5  | 2 	   |   5    |
-    | zeropage,X	| INC oper,X	 | F6	 | 2     |   6    |  
-    | absolute	  | INC oper	   | EE	 | 3	   |   6    |
-    | absolute,X	| INC oper,X	 | FE	 | 3	   |   7    |
+    | zeropage   | INC oper     | E5  | 2     |   5    |
+    | zeropage,X | INC oper,X  | F6  | 2     |   6    |  
+    | absolute   | INC oper    | EE  | 3    |   6    |
+    | absolute,X | INC oper,X  | FE  | 3    |   7    |
   
-  
-
-  - INX
+- INX
     Increment Index Register X By One
 
     Increment X adds 1 to the current value of the X register. This is an 8-bit increment which does not affect the carry operation, therefore, if the value of X before the increment was FF, the resulting value is 00.
@@ -561,12 +527,11 @@ The 6502 does not have any special support of hardware devices so they must be m
         X + 1 -> X                               N Z C I D V
                                                  + + - - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | implied  	  |     INX      | E8  | 1 	   |   2    |
+    | implied     |     INX      | E8  | 1     |   2    |
 
-  - INY
+- INY
     Increment Index Register Y By One
 
     Increment Y increments or adds one to the current value in the Y register, storing the result in the Y register. As in the case of INX the primary application is to step thru a set of values using the Y register.
@@ -576,16 +541,15 @@ The 6502 does not have any special support of hardware devices so they must be m
         Y + 1 -> Y                               N Z C I D V
                                                  + + - - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | implied  	  |     INY      | C8  | 1 	   |   2    |
+    | implied     |     INY      | C8  | 1     |   2    |
 
+## Logical Operations
 
-  ## Logical Operations
   The following instructions perform logical operations on the contents of the accumulator and another value held in memory. The BIT instruction performs a logical AND to test the presence of bits in the memory value to set the flags but does not keep the result.
 
-  - AND
+- AND
   
     and (with accumulator)
 
@@ -596,20 +560,18 @@ The 6502 does not have any special support of hardware devices so they must be m
         A AND M -> A                             N Z C I D V
                                                  + + + - - +
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | immediate   | AND #oper    | 29  | 2     | 2      |   
-    | zeropage  	| AND oper     | 25  | 2 	   | 3      |
-    | zeropage,X	| AND oper,X	 | 35	 | 2     | 4      |  
-    | absolute	  | AND oper	   | 2D	 | 3	   | 4      |
-    | absolute,X	| AND oper,X	 | 3D	 | 3	   | 4*     |
-    | absolute,Y	| AND oper,Y	 | 39	 | 3	   | 4*     |
-    | (indirect,X)| AND (oper,X) | 21	 | 2     | 6      |
-    | (indirect),Y| AND (oper),Y | 31  | 2     | 5*     |      
+    | immediate   | AND #oper    | 29  | 2     | 2      |
+    | zeropage   | AND oper     | 25  | 2     | 3      |
+    | zeropage,X | AND oper,X  | 35  | 2     | 4      |  
+    | absolute   | AND oper    | 2D  | 3    | 4      |
+    | absolute,X | AND oper,X  | 3D  | 3    | 4*     |
+    | absolute,Y | AND oper,Y  | 39  | 3    | 4*     |
+    | (indirect,X)| AND (oper,X) | 21  | 2     | 6      |
+    | (indirect),Y| AND (oper),Y | 31  | 2     | 5*     |
 
-
-  - EOR
+- EOR
 
     exclusive or (with accumulator)
 
@@ -620,20 +582,18 @@ The 6502 does not have any special support of hardware devices so they must be m
         A EOR M -> A                             N Z C I D V
                                                  + + - - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | immediate   | EOR #oper    | 49  | 2     | 2      |   
-    | zeropage  	| EOR oper     | 45  | 2 	   | 3      |
-    | zeropage,X	| EOR oper,X	 | 55	 | 2     | 4      |  
-    | absolute	  | EOR oper	   | 4D	 | 3	   | 4      |
-    | absolute,X	| EOR oper,X	 | 5D	 | 3	   | 4*     |
-    | absolute,Y	| EOR oper,Y	 | 59	 | 3	   | 4*     |
-    | (indirect,X)| EOR (oper,X) | 41	 | 2     | 6      |
-    | (indirect),Y| EOR (oper),Y | 51  | 2     | 5*     |      
+    | immediate   | EOR #oper    | 49  | 2     | 2      |
+    | zeropage   | EOR oper     | 45  | 2     | 3      |
+    | zeropage,X | EOR oper,X  | 55  | 2     | 4      |  
+    | absolute   | EOR oper    | 4D  | 3    | 4      |
+    | absolute,X | EOR oper,X  | 5D  | 3    | 4*     |
+    | absolute,Y | EOR oper,Y  | 59  | 3    | 4*     |
+    | (indirect,X)| EOR (oper,X) | 41  | 2     | 6      |
+    | (indirect),Y| EOR (oper),Y | 51  | 2     | 5*     |
 
-
-  - ORA
+- ORA
   
     (inclusive) or with accumulator
     The ORA instruction transfers the memory and the accumulator to the adder which performs a binary "OR" on a bit-by-bit basis and stores the result in the accumulator.
@@ -643,50 +603,47 @@ The 6502 does not have any special support of hardware devices so they must be m
         A OR M -> A                              N Z C I D V
                                                  + + - - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | immediate   | ORA #oper    | 09  | 2     | 2      |   
-    | zeropage  	| ORA oper     | 05  | 2 	   | 3      |
-    | zeropage,X	| ORA oper,X	 | 15	 | 2     | 4      |  
-    | absolute	  | ORA oper	   | 0D	 | 3	   | 4      |
-    | absolute,X	| ORA oper,X	 | 1D	 | 3	   | 4*     |
-    | absolute,Y	| ORA oper,Y	 | 19	 | 3	   | 4*     |
-    | (indirect,X)| ORA (oper,X) | 01	 | 2     | 6      |
-    | (indirect),Y| ORA (oper),Y | 11  | 2     | 5*     |    
+    | immediate   | ORA #oper    | 09  | 2     | 2      |
+    | zeropage   | ORA oper     | 05  | 2     | 3      |
+    | zeropage,X | ORA oper,X  | 15  | 2     | 4      |  
+    | absolute   | ORA oper    | 0D  | 3    | 4      |
+    | absolute,X | ORA oper,X  | 1D  | 3    | 4*     |
+    | absolute,Y | ORA oper,Y  | 19  | 3    | 4*     |
+    | (indirect,X)| ORA (oper,X) | 01  | 2     | 6      |
+    | (indirect),Y| ORA (oper),Y | 11  | 2     | 5*     |
   
+## Arithmetic Operations
 
-  ## Arithmetic Operations
   The arithmetic operations perform addition and subtraction on the contents of the accumulator. The compare operations allow the comparison of the accumulator and X or Y with memory values.
 
-  - ADC 
+- ADC
 
     Add with Carry
 
     This instruction adds the value of memory and carry from the previous operation to the value of the accumulator and stores the result in the accumulator.
 
     This instruction affects the accumulator; sets the carry flag when the sum of a binary add exceeds 255 or when the sum of a decimal add exceeds 99, otherwise carry is reset. The overflow flag is set when the sign or bit 7 is changed due to the result exceeding +127 or -128, otherwise overflow is reset. The negative flag is set if the accumulator result contains bit 7 on, otherwise the negative flag is reset. The zero flag is set if the accumulator result is 0, otherwise the zero flag is reset.
-    
+
     Note on the MOS 6502:
     In decimal mode, the N, V and Z flags are not consistent with the decimal result.
 
         A + M + C -> A, C                        N Z C I D V
                                                  + + + - - +
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | immediate   | ADC #oper    | 69  | 2     | 2      |   
-    | zeropage  	| ADC oper     | 65  | 2 	   | 3      |
-    | zeropage,X	| ADC oper,X	 | 75	 | 2     | 4      |  
-    | absolute	  | ADC oper	   | 6D	 | 3	   | 4      |
-    | absolute,X	| ADC oper,X	 | 7D	 | 3	   | 4*     |
-    | absolute,Y	| ADC oper,Y	 | 79	 | 3	   | 4*     |
-    | (indirect,X)| ADC (oper,X) | 61	 | 2     | 6      |
+    | immediate   | ADC #oper    | 69  | 2     | 2      |
+    | zeropage   | ADC oper     | 65  | 2     | 3      |
+    | zeropage,X | ADC oper,X  | 75  | 2     | 4      |  
+    | absolute   | ADC oper    | 6D  | 3    | 4      |
+    | absolute,X | ADC oper,X  | 7D  | 3    | 4*     |
+    | absolute,Y | ADC oper,Y  | 79  | 3    | 4*     |
+    | (indirect,X)| ADC (oper,X) | 61  | 2     | 6      |
     | (indirect),Y| ADC (oper),Y | 71  | 2     | 5*     |
 
-
-  - SBC
+- SBC
 
     Subtract with Carry
 
@@ -702,22 +659,22 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | immediate   |  SBC #oper   | E9  |   2   |    2   | 
-    | zeropage    |  SBC oper    | E5  |   2   |    3   | 
-    | zeropage,X  |  SBC oper,X  | F5  |   2   |    4   | 
-    | absolute    |  SBC oper    | ED  |   3   |    4   | 
-    | absolute,X  |  SBC oper,X  | FD  |   3   |    4*  | 
-    | absolute,Y  |  SBC oper,Y  | F9  |   3   |    4*  | 
-    | (indirect,X)|  SBC (oper,X)| E1  |   2   |    6   | 
-    | (indirect),Y|  SBC (oper),Y| F1  |   2   |    5*  | 
+    | immediate   |  SBC #oper   | E9  |   2   |    2   |
+    | zeropage    |  SBC oper    | E5  |   2   |    3   |
+    | zeropage,X  |  SBC oper,X  | F5  |   2   |    4   |
+    | absolute    |  SBC oper    | ED  |   3   |    4   |
+    | absolute,X  |  SBC oper,X  | FD  |   3   |    4*  |
+    | absolute,Y  |  SBC oper,Y  | F9  |   3   |    4*  |
+    | (indirect,X)|  SBC (oper,X)| E1  |   2   |    6   |
+    | (indirect),Y|  SBC (oper),Y| F1  |   2   |    5*  |
 
-  
-  ## Shift & Rotate Instructions
+## Shift & Rotate Instructions
+
   All shift and rotate instructions preserve the bit shifted out in the carry flag.
 
-  - ASL
+- ASL
     arithmetic shift left (shifts in a zero bit on the right)
-    
+
     The shift left instruction shifts either the accumulator or the address memory location 1 bit to the left, with the bit 0 always being set to 0 and the the input bit 7 being stored in the carry flag. ASL either shifts the accumulator left 1 bit or is a read/modify/write instruction that affects only memory.
 
     The instruction does not affect the overflow bit, sets N equal to the result bit 7 (bit 6 in the input), sets Z flag if the result is equal to 0, otherwise resets Z and stores the input bit 7 in the carry flag.
@@ -727,14 +684,13 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | accumulator | ASL A        | 0A  | 1     | 2      |   
-    | zeropage  	| ASL oper     | 06	 | 2 	   | 5      |
-    | zeropage,X	| ASL oper,X	 | 16	 | 2     | 6      |  
-    | absolute	  | ASL oper	   | 0E	 | 3	   | 6      |
-    | absolute,X	| ASL oper,X	 | 1E	 | 3	   | 7      |
+    | accumulator | ASL A        | 0A  | 1     | 2      |
+    | zeropage   | ASL oper     | 06  | 2     | 5      |
+    | zeropage,X | ASL oper,X  | 16  | 2     | 6      |  
+    | absolute   | ASL oper    | 0E  | 3    | 6      |
+    | absolute,X | ASL oper,X  | 1E  | 3    | 7      |
 
-
-  - LSR
+- LSR
 
     logical shift right (shifts in a zero bit on the left)
 
@@ -745,16 +701,15 @@ The 6502 does not have any special support of hardware devices so they must be m
         0 -> [76543210] -> C                     N Z C I D V
                                                  0 + + - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | accumulator |  LSR A       | 4A  |   1   |   2    | 
-    | zeropage    |  LSR oper    | 46  |   2   |   5    | 
-    | zeropage,X  |  LSR oper,X  | 56  |   2   |   6    | 
-    | absolute    |  LSR oper    | 4E  |   3   |   6    | 
-    | absolute,X  |  LSR oper,X  | 5E  |   3   |   7    | 
+    | accumulator |  LSR A       | 4A  |   1   |   2    |
+    | zeropage    |  LSR oper    | 46  |   2   |   5    |
+    | zeropage,X  |  LSR oper,X  | 56  |   2   |   6    |
+    | absolute    |  LSR oper    | 4E  |   3   |   6    |
+    | absolute,X  |  LSR oper,X  | 5E  |   3   |   7    |
 
-  - ROL
+- ROL
 
     rotate left (shifts in carry bit on the right)
 
@@ -762,20 +717,18 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     The ROL instruction either shifts the accumulator left 1 bit and stores the carry in accumulator bit 0 or does not affect the internal reg­isters at all. The ROL instruction sets carry equal to the input bit 7, sets N equal to the input bit 6 , sets the Z flag if the result of the ro­ tate is 0, otherwise it resets Z and does not affect the
 
-
         C <- [76543210] <- C                     N Z C I D V
                                                  + + + - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | accumulator |  ROL A       | 2A  |   1   |   2    | 
-    | zeropage    |  ROL oper    | 26  |   2   |   5    | 
-    | zeropage,X  |  ROL oper,X  | 36  |   2   |   6    | 
-    | absolute    |  ROL oper    | 2E  |   3   |   6    | 
-    | absolute,X  |  ROL oper,X  | 3E  |   3   |   7    | 
+    | accumulator |  ROL A       | 2A  |   1   |   2    |
+    | zeropage    |  ROL oper    | 26  |   2   |   5    |
+    | zeropage,X  |  ROL oper,X  | 36  |   2   |   6    |
+    | absolute    |  ROL oper    | 2E  |   3   |   6    |
+    | absolute,X  |  ROL oper,X  | 3E  |   3   |   7    |
 
-  - ROR
+- ROR
 
     rotate right (shifts in zero bit on the left)
 
@@ -786,19 +739,19 @@ The 6502 does not have any special support of hardware devices so they must be m
         C <- [76543210] <- C                     N Z C I D V
                                                  + + + - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | accumulator |  ROR A       | 6A  |   1   |   2    | 
-    | zeropage    |  ROR oper    | 66  |   2   |   5    | 
-    | zeropage,X  |  ROR oper,X  | 76  |   2   |   6    | 
-    | absolute    |  ROR oper    | 6E  |   3   |   6    | 
-    | absolute,X  |  ROR oper,X  | 7E  |   3   |   7    | 
+    | accumulator |  ROR A       | 6A  |   1   |   2    |
+    | zeropage    |  ROR oper    | 66  |   2   |   5    |
+    | zeropage,X  |  ROR oper,X  | 76  |   2   |   6    |
+    | absolute    |  ROR oper    | 6E  |   3   |   6    |
+    | absolute,X  |  ROR oper,X  | 7E  |   3   |   7    |
 
-  ## Flag Instructions
+## Flag Instructions
+
   The following instructions change the values of specific status flags.
 
-  - CLC
+- CLC
 
     clear carry
 
@@ -806,34 +759,29 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     This instruction affects no registers in the microprocessor and no flags other than the carry flag which is reset.
 
-
         0 -> C                                   N Z C I D V
                                                  - - 0 - - -
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    |  implied    |      CLC     | 18  |   1   |   2    | 
+    |  implied    |      CLC     | 18  |   1   |   2    |
 
-  - CLD
+- CLD
 
     clear decimal (BCD arithmetics disabled)
-    
+
     This instruction sets the decimal mode flag to a 0. This all subsequent ADC and SBC instructions to operate as simple operations.
 
     CLD affects no registers in the microprocessor and no flags other than the decimal mode flag which is set to a 0.
-
 
         0 -> D                                   N Z C I D V
                                                  - - - - 0 -
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    |  implied    |     CLD      | D8  |   1   |   2    | 
+    |  implied    |     CLD      | D8  |   1   |   2    |
 
-
-
-
-  - CLI
+- CLI
 
     This instruction initializes the interrupt disable to a 0. This allows the microprocessor to receive interrupts.
 
@@ -846,11 +794,9 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    |  implied    |     CLI      | 58  |   1   |   2    | 
+    |  implied    |     CLI      | 58  |   1   |   2    |
 
-    
-  
-  - CLV
+- CLV
 
     clear overflow
 
@@ -865,10 +811,9 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    |  implied    |     CLV      | B8  |   1   |   2    | 
+    |  implied    |     CLV      | B8  |   1   |   2    |
 
-  
-  - SEC
+- SEC
 
     set carry
 
@@ -876,17 +821,14 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     This instruction affects no registers in the microprocessor and no flags other than the carry flag which is set.
 
-
         1 -> C                                   N Z C I D V
                                                  - - 1 - - -
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    |  implied    |     SEC      | 38  |   1   |   2    | 
+    |  implied    |     SEC      | 38  |   1   |   2    |
 
-    
-  
-  - SED
+- SED
 
     set decimal (BCD arithmetics enabled)
 
@@ -894,15 +836,14 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     SED affects no registers in the microprocessor and no flags other than the decimal mode which is set to a 1.
 
-
         1 -> D                                   N Z C I D V
                                                  - - - - 1 -
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    |  implied    |     SED      | F8  |   1   |   2    | 
+    |  implied    |     SED      | F8  |   1   |   2    |
   
-  - SEI
+- SEI
 
     set interrupt disable
 
@@ -915,12 +856,12 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    |  implied    |     SEI      | 78  |   1   |   2    | 
+    |  implied    |     SEI      | 78  |   1   |   2    |
 
-  ## Comparisons
+## Comparisons
+
   Generally, comparison instructions subtract the operand from the given register without affecting this register. Flags are still set as with a normal subtraction and thus the relation of the two values becomes accessible by the Zero, Carry and Negative flags.
   (See the branch instructions below for how to evaluate flags.)
-
 
   |Relation R − Op   |  Z  |   C   |   N                  |
   |:----------------:|:---:|-------|:--------------------:|
@@ -928,7 +869,7 @@ The 6502 does not have any special support of hardware devices so they must be m
   |Register = Operand|  1  |   1   |   0                  |
   |Register > Operand|  0  |   1   |   sign bit of result |
 
-  - CMP
+- CMP
   
     compare (with accumulator)
 
@@ -941,16 +882,16 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | immediate   |  CMP #oper   | C9  |   2   |    2   | 
-    | zeropage    |  CMP oper    | C5  |   2   |    3   | 
-    | zeropage,X  |  CMP oper,X  | D5  |   2   |    4   | 
-    | absolute    |  CMP oper    | CD  |   3   |    4   | 
-    | absolute,X  |  CMP oper,X  | DD  |   3   |    4*  | 
-    | absolute,Y  |  CMP oper,Y  | D9  |   3   |    4*  | 
-    | (indirect,X)|  CMP (oper,X)| C1  |   2   |    6   | 
-    | (indirect),Y|  CMP (oper),Y| D1  |   2   |    5*  | 
+    | immediate   |  CMP #oper   | C9  |   2   |    2   |
+    | zeropage    |  CMP oper    | C5  |   2   |    3   |
+    | zeropage,X  |  CMP oper,X  | D5  |   2   |    4   |
+    | absolute    |  CMP oper    | CD  |   3   |    4   |
+    | absolute,X  |  CMP oper,X  | DD  |   3   |    4*  |
+    | absolute,Y  |  CMP oper,Y  | D9  |   3   |    4*  |
+    | (indirect,X)|  CMP (oper,X)| C1  |   2   |    6   |
+    | (indirect),Y|  CMP (oper),Y| D1  |   2   |    5*  |
   
-  - CPX
+- CPX
   
     compare with X
 
@@ -963,11 +904,11 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | immediate   |  CMX #oper   | E0  |   2   |    2   | 
-    | zeropage    |  CMX oper    | E4  |   2   |    3   | 
-    | absolute    |  CMX oper    | EC  |   3   |    4   | 
+    | immediate   |  CMX #oper   | E0  |   2   |    2   |
+    | zeropage    |  CMX oper    | E4  |   2   |    3   |
+    | absolute    |  CMX oper    | EC  |   3   |    4   |
   
-  - CPY
+- CPY
   
     compare with Y
 
@@ -975,23 +916,20 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     CPY affects no registers in the microprocessor and also does not affect the overflow flag. If the value in the index register Y is equal to or greater than the value in the memory, the carry flag will be set, otherwise it will be cleared. If the results of the subtract- tion contain bit 7 on the N bit will be set, otherwise it will be cleared. If the value in the index register Y and the value in the memory are equal, the zero flag will be set, otherwise it will be cleared.
 
-
         Y - M                                      N Z C I D V
                                                    + + + - - -
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | immediate   |  CMY #oper   | C0  |   2   |    2   | 
-    | zeropage    |  CMY oper    | C4  |   2   |    3   | 
-    | absolute    |  CMY oper    | CC  |   3   |    4   | 
+    | immediate   |  CMY #oper   | C0  |   2   |    2   |
+    | zeropage    |  CMY oper    | C4  |   2   |    3   |
+    | absolute    |  CMY oper    | CC  |   3   |    4   |
   
+## Comparisons
 
-
-  ## Comparisons
   Branch targets are relative, signed 8-bit address offsets. (An offset of #0 corresponds to the immedately following address — or a rather odd and expensive NOP.)
 
-  
-  - BCC
+- BCC
   
     branch on carry clear
 
@@ -1004,10 +942,9 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | relative    | BCC oper     | 90  | 2     | 2**    |   
+    | relative    | BCC oper     | 90  | 2     | 2**    |
 
-  
-  - BCS
+- BCS
   
     branch on carry set
 
@@ -1020,10 +957,9 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | relative    | BCS oper     | B0  | 2     | 2**    |   
+    | relative    | BCS oper     | B0  | 2     | 2**    |
 
-  
-  - BEQ
+- BEQ
   
     branch on equal (zero set)
 
@@ -1040,8 +976,7 @@ The 6502 does not have any special support of hardware devices so they must be m
     |:-----------:|:------------:|:---:|:-----:|:------:|
     | relative    | BCS oper     | B0  | 2     | 2**    |  
 
-
-  - BMI
+- BMI
   
     branch on minus (negative set)
 
@@ -1056,7 +991,7 @@ The 6502 does not have any special support of hardware devices so they must be m
     |:-----------:|:------------:|:---:|:-----:|:------:|
     | relative    | BMI oper     | 30  | 2     | 2**    |  
   
-  - BNE
+- BNE
   
     branch on not equal (zero clear)
 
@@ -1071,7 +1006,7 @@ The 6502 does not have any special support of hardware devices so they must be m
     |:-----------:|:------------:|:---:|:-----:|:------:|
     | relative    | BNE oper     | D0  | 2     | 2**    |  
 
-  - BPL
+- BPL
   
     branch on plus (negative clear)
 
@@ -1086,7 +1021,7 @@ The 6502 does not have any special support of hardware devices so they must be m
     |:-----------:|:------------:|:---:|:-----:|:------:|
     | relative    | BPL oper     | 10  | 2     | 2**    |  
   
-  - BVC
+- BVC
   
     branch on overflow clear
 
@@ -1099,9 +1034,9 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | relative    | BVC oper     | 50  |   2   | 2**    | 
+    | relative    | BVC oper     | 50  |   2   | 2**    |
   
-  - BVS
+- BVS
   
     branch on overflow set
 
@@ -1114,15 +1049,14 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | relative    | BVS oper     | 70  |   2   | 2**    | 
+    | relative    | BVS oper     | 70  |   2   | 2**    |
 
+## Jumps & Subroutines
 
-  ## Jumps & Subroutines
   JSR and RTS affect the stack as the return address is pushed onto or pulled from the stack, respectively.
   (JSR will first push the high-byte of the return address [PC+2] onto the stack, then the low-byte. The stack will then contain, seen from the bottom or from the most recently added byte, [PC+2]-L [PC+2]-H.)
 
-  
-  - JMP
+- JMP
   
     jump
 
@@ -1130,18 +1064,15 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     It affects only the program counter in the microprocessor and affects no flags in the status register.
   
-
         (PC+1) -> PCL                              N Z C I D V
         (PC+2) -> PCH                              - - - - - -
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | absolute    | JMP oper     | 4C  |   3   |   3    | 
-    | relative    | JMP (oper)   | 6C  |   3   |   5    | 
+    | absolute    | JMP oper     | 4C  |   3   |   3    |
+    | relative    | JMP (oper)   | 6C  |   3   |   5    |
 
-
-
-  - JSR
+- JSR
   
     jump subroutine
 
@@ -1149,16 +1080,15 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     The JSR instruction affects no flags, causes the stack pointer to be decremented by 2 and substitutes new values into the program counter low and the program counter high.
 
-
         push (PC+2)                                N Z C I D V
         (PC+1) -> PCL                              - - - - - -
         (PC+2) -> PCH
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | absolute    | JSR oper     | 20  |   3   |   6    | 
+    | absolute    | JSR oper     | 20  |   3   |   6    |
   
-  - RTS
+- RTS
   
     return from subroutine
 
@@ -1166,8 +1096,8 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     The RTS instruction does not affect any flags and affects only PCL and PCH.
 
-  
-  ## Interrupts
+## Interrupts
+
   A hardware interrupt (maskable IRQ and non-maskable NMI), will cause the processor to put first the address currently in the program counter onto the stack (in HB-LB order), followed by the value of the status register. (The stack will now contain, seen from the bottom or from the most recently added byte, SR PC-L PC-H with the stack pointer pointing to the address below the stored contents of status register.) Then, the processor will divert its control flow to the address provided in the two word-size interrupt vectors at $FFFA (IRQ) and $FFFE (NMI).
   A set interrupt disable flag will inhibit the execution of an IRQ, but not of a NMI, which will be executed anyways.
   The break instruction (BRK) behaves like a NMI, but will push the value of PC+2 onto the stack to be used as the return address. Also, as with any software initiated transfer of the status register to the stack, the break flag will be found set on the respective value pushed onto the stack. Then, control is transferred to the address in the NMI-vector at $FFFE.
@@ -1175,7 +1105,7 @@ The 6502 does not have any special support of hardware devices so they must be m
 
   The RTI instruction restores the status register from the stack and behaves otherwise like the JSR instruction. (The break flag is always ignored as the status is read from the stack, as it isn't a real processor flag anyway.)
 
-  - BRK
+- BRK
   
     break / software interrupt
 
@@ -1189,9 +1119,9 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | implied     | BRK          | 00  | 1     | 7      | 
+    | implied     | BRK          | 00  | 1     | 7      |
   
-  - RTI
+- RTI
 
     return from interrupt
 
@@ -1202,18 +1132,17 @@ The 6502 does not have any special support of hardware devices so they must be m
         pull SR, pull PC                         N Z C I D V
                                                  from stack
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
     |   implied   |     RTI      | 40  |   1   |   6    |
 
-  ## Other
+## Other
   
-  - BIT   
+- BIT
 
-    Bit Test     
+    Bit Test
 
-    This instruction performs an AND between a memory location and the accumulator but does not store the result of the AND into the accumulator.   
+    This instruction performs an AND between a memory location and the accumulator but does not store the result of the AND into the accumulator.
 
     The bit instruction affects the N flag with N being set to the value of bit 7 of the memory being tested, the V flag with V being set equal to bit 6 of the memory being tested and Z being set by the result of the AND operation between the accumulator and the memory if the result is Zero, Z is reset otherwise. It does not affect the accumulator.
 
@@ -1222,10 +1151,10 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | zeropage    | BIT oper     | 24	 | 2     | 3      |  
-    | absolute    | BIT oper     | 2C	 | 3     | 4      | 
-    
-  - NOP
+    | zeropage    | BIT oper     | 24  | 2     | 3      |  
+    | absolute    | BIT oper     | 2C  | 3     | 4      |
+
+- NOP
 
     No operation
 
@@ -1234,23 +1163,19 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    | implied     |    NOP       | EA	 |   1   |   2    |  
-    
-  
-
-
+    | implied     |    NOP       | EA  |   1   |   2    |  
 
 # Addressing Mode
+
   The 6502 processor provides several ways in which memory locations can be addressed. Some instructions support several different modes while others may only support one. In addition the two index registers can not always be used interchangeably. This lack of orthogonality in the instruction set is one of the features that makes the 6502 trickier to program well.
 
+## Implied Addressing
 
-  ## Implied Addressing
   These instructions act directly on one or more registers or flags internal to the CPU. Therefor, these instructions are principally single-byte instructions, lacking an explicit operand. The operand is implied, as it is already provided by the very instruction.
 
   Instructions targeting exclusively the contents of the accumulator may or may not be denoted by using an explicit "A" as the operand, depending on the flavor of syntax. (This may be regarded as a special address mode of its own, but it is really a special case of an implied instruction. It is still a single-byte instruction and no operand is provided in machine language.)
 
-  
-  - CLC
+- CLC
   
     clear the carry flag
   
@@ -1263,10 +1188,9 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    |  implied    |     CLC      | 18  |   1   | 2**    | 
+    |  implied    |     CLC      | 18  |   1   | 2**    |
 
-
-  - ROL
+- ROL
   
     rotate contents of accumulator left by one position
 
@@ -1274,7 +1198,7 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     The ROL instruction either shifts the accumulator left 1 bit and stores the carry in accumulator bit 0 or does not affect the internal reg­isters at all. The ROL instruction sets carry equal to the input bit 7, sets N equal to the input bit 6 , sets the Z flag if the result of the ro­ tate is 0, otherwise it resets Z and does not affect the overflow flag at all.
   
-  - TXA
+- TXA
   
     transfer contents of X-register to the accumulator
 
@@ -1285,13 +1209,11 @@ The 6502 does not have any special support of hardware devices so they must be m
         X -> A                                   N Z C I D V
                                                  + + - - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    |  implied    |     TXA      | 8A  |   1   |   2    | 
+    |  implied    |     TXA      | 8A  |   1   |   2    |
 
-  
-  - PHA
+- PHA
     push the contents of the accumulator to the stack
 
     This instruction transfers the current value of the accumulator to the next location on the stack, automatically decrementing the stack to point to the next empty location.
@@ -1303,10 +1225,9 @@ The 6502 does not have any special support of hardware devices so they must be m
 
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
-    |  implied    |     PHA      | 48  |   1   |   3    | 
-    
-  
-  - RTS
+    |  implied    |     PHA      | 48  |   1   |   3    |
+
+- RTS
   
     return from subroutine (by pulling PC from stack)
 
@@ -1319,15 +1240,12 @@ The 6502 does not have any special support of hardware devices so they must be m
         pull PC, PC + 1 -> PC                    N Z C I D V
                                                  - - - - - -
 
-
     |   Address   |  assembler   | opc | bytes | cycles |
     |:-----------:|:------------:|:---:|:-----:|:------:|
     |   implied   |     RTS      | 60  |   1   |   6    |
 
+## Immediate Addressing
 
-
-
-  ## Immediate Addressing
   Here, a literal operand is given immediately after the instruction. The operand is always an 8-bit value and the total instruction length is always 2 bytes. In memory, the operand is a single byte following immediately after the instruction code. In assembler, the mode is usually indicated by a "#" prefix adjacent to the operand.
 
     Mnemonic       Instruction 
@@ -1344,7 +1262,8 @@ The 6502 does not have any special support of hardware devices so they must be m
   ADC #$A0 =>  add the literal hexidecimal value "$A0" to the accumulator<br>
   CPX #$32 =>  compare the X-register to the literal hexidecimal value "$32"
 
-  ## Absolute Addressing
+## Absolute Addressing
+
   Absolute addressing modes provides the 16-bit address of a memory location, the contents of which used as the operand to the instruction. In machine language, the address is provided in two bytes immediately after the instruction (making these 3-byte instructions) in low-byte, high-byte order (LLHH) or little-endian. In assembler, conventional numbers (HHLL order or big-endian words) are used to provide the address.
 
   Absolute addresses are also used for the jump instructions JMP and JSR to provide the address for the next instruction to continue with in the control flow.
@@ -1362,7 +1281,8 @@ The 6502 does not have any special support of hardware devices so they must be m
   ROL $08A0 => rotate the contents of address "$08A0" left by one position<br>
   JMP $4000 => jump to (continue with) location "$4000"<br>
 
-  ## Zero-Page Addressing
+## Zero-Page Addressing
+
   The 16-bit address space available to the 6502 is thought to consist of 256 "pages" of 256 memory locations each ($00…$FF). In this model the high-byte of an address gives the page number and the low-byte a location inside this page. The very first of these pages, where the high-byte is zero (addresses $0000…$00FF), is somewhat special.
 
   The zero-page address mode is similar to absolute address mode, but these instructions use only a single byte for the operand, the low-byte, while the high-byte is assumed to be zero by definition. Therefore, these instructions have a total length of just two bytes (one less than absolute mode) and take one CPU cycle less to execute, as there is one byte less to fetch.
@@ -1383,7 +1303,8 @@ The 6502 does not have any special support of hardware devices so they must be m
 
   (One way to think of the zero-page is as a page of 256 additional registers, somewhat slower than the internal registers, but with zero-page instructions also faster executing than "normal" instructions. The zero-page has a few more tricks up its sleeve, making these addresses perform more like real registers, see below.)
 
-  ## Indexed Addressing: Absolute,X and Absolute,Y
+## Indexed Addressing: Absolute,X and Absolute,Y
+
   Indexed addressing adds the contents of either the X-register or the Y-register to the provided address to give the effective address, which provides the operand.
 
   These instructions are usefull to e.g., load values from tables or to write to a continuous segment of memory in a loop. The most basic forms are "absolute,X" and "absolute,X", where either the X- or the Y-register, respectively, is added to a given base address. As the base address is a 16-bit value, these are generally 3-byte instructions. Since there is an additional operation to perform to determine the effective address, these instructions are one cycle slower than those using absolute addressing mode.*
@@ -1406,8 +1327,8 @@ The 6502 does not have any special support of hardware devices so they must be m
 
   *) If the addition of the contents of the index register effects in a change of the high-byte given by the base address so that the effective address is on the next memory page, the additional operation to increment the high-byte takes another CPU cycle. This is also known as a crossing of page boundaries.
 
+## Indexed Addressing: Zero-Page,X (and Zero-Page,Y)
 
-  ## Indexed Addressing: Zero-Page,X (and Zero-Page,Y)
   As with absolute addressing, there is also a zero-page mode for indexed addressing. However, this is generally only available with the X-register. (The only exception to this is LDX, which has an indexed zero-page mode utilizing the Y-register.)<br>
   As we have already seen with normal zero-page mode, these instructions are one byte less in total length (two bytes) and take one CPU cycle less than instructions in absolute indexed mode.
 
@@ -1424,7 +1345,8 @@ The 6502 does not have any special support of hardware devices so they must be m
                                           __
                                       A: |64|
 
-  ## Indirect Addressing
+## Indirect Addressing
+
   This mode looks up a given address and uses the contents of this address and the next one (in LLHH little-endian order) as the effective address. In its basic form, this mode is available for the JMP instruction only. (Its generally use is jump vectors and jump tables.)<br>
   Like the absolute JMP instruction it uses a 16-bit address (3 bytes in total), but takes two additional CPU cycles to execute, since there are two additional bytes to fetch for the lookup of the effective jump target.
 
@@ -1439,10 +1361,10 @@ The 6502 does not have any special support of hardware devices so they must be m
 
   Mnemonic Exemple:
 
-  JMP ($FF82) => jump to address given in addresses "$FF82" and "$FF83"   
+  JMP ($FF82) => jump to address given in addresses "$FF82" and "$FF83"
 
+## Pre-Indexed Indirect, "(Zero-Page,X)"
 
-  ## Pre-Indexed Indirect, "(Zero-Page,X)"
   Indexed indirect address modes are generally available only for instructions supplying an operand to the accumulator (LDA, STA, ADC, SBC, AND, ORA, EOR, etc). The placement of the index register inside or outside of the parenthesis indicating the address lookup will give you clue what these instructions are doing.
 
   Pre-indexed indirect address mode is only available in combination with the X-register. It works much like the "zero-page,X" mode, but, after the X-register has been added to the base address, instead of directly accessing this, an additional lookup is performed, reading the contents of resulting address and the next one (in LLHH little-endian order), in order to determine the effective address.
@@ -1467,7 +1389,8 @@ The 6502 does not have any special support of hardware devices so they must be m
   STA ($A2,X) => store the contents of A in the location given in addresses "$00A2+X" and "$00A3+X"<br/>
   EOR ($BA,X) => perform an exlusive OR of the contents of A and the contents
 
-  ## Post-Indexed Indirect, "(Zero-Page),Y"
+## Post-Indexed Indirect, "(Zero-Page),Y"
+
   Post-indexed indirect addressing is only available in combination with the Y-register. As indicated by the indexing term ",Y" being appended to the outside of the parenthesis indicating the indirect lookup, here, a pointer is first read (from the given zero-page address) and resolved and only then the contents of the Y-register is added to this to give the effective address.
 
   Like with "zero-page,Y" mode, the total instruction length is 2 bytes, but there it takes an additional CPU cycles to resolve and index the 16-bit pointer. As with "absolute,X" mode, the effective address may overflow into the next page, in the case of which the execution uses an extra CPU cycle.
@@ -1489,14 +1412,14 @@ The 6502 does not have any special support of hardware devices so they must be m
   STA ($A2,Y) => store the contents of A in the location given by the pointer in "$00A2" and "$00A3" plus the contents of the Y-register<br/>
   EOR ($BA,Y) => perform an exlusive OR of the contents of A and the address given by the addition of Y to the pointer in "$00BA" and "$00BB"
 
-  ## Relative Addressing (Conditional Branching)
+## Relative Addressing (Conditional Branching)
+
   This final address mode is exlusive to conditional branch instructions, which branch in the execution path depending on the state of a given CPU flag. Here, the instruction provides only a relative offset, which is added to the contents of the program counter (PC) as it points to the immediate next instruction. The relative offset is a signed single byte value in two's complement encoding (giving a range of −128…+127), which allows for branching up to half a page forwards and backwards.
   On the one hand, this makes these instructions compact, fast and relocatable at the same time. On the other hand, we have to mind that our branch target is no farther away than half a memory page.
 
   Generally, an assembler will take care of this and we only have to provide the target address, not having to worry about relative addressing.
 
   These instructions are always of 2 bytes length and perform in 2 CPU cycles, if the branch is not taken (the condition resolving to 'false'), and 3 cycles, if the branch is taken (when the condition is true). If a branch is taken and the target is on a different page, this adds another CPU cycle (4 in total).
-
 
     PC      Mnemonic     Instruction            Target       
                           __ __      
@@ -1509,9 +1432,8 @@ The 6502 does not have any special support of hardware devices so they must be m
     BCS $08C4 => branch to location "$08C4", if the carry flag is set. if the current address is $08D4, this will give an offset of $EE (−$12).<br/>
     BCC $084A => branch to location "$084A", if the carry flag is clear.
 
-
-
 # A Primer of 6502 Arithmetic Operations
+
   The 6502 processor features two basic arithmetic instructions, ADC, ADd with Carry,
   and SBC, SuBtract with Carry. As the names suggest, these provide addition and
   subtraction for single byte operands and results. However, operations are not
@@ -1547,10 +1469,10 @@ The 6502 does not have any special support of hardware devices so they must be m
 
   Supposing two 16-bit values in
 
-  $1000 ... first argument, low byte 
+  $1000 ... first argument, low byte
   $1001 ... first argument, high byte
 
-  $1002 ... second argument, low byte 
+  $1002 ... second argument, low byte
   $1003 ... second argument, high byte
 
   and
@@ -1582,7 +1504,8 @@ The 6502 does not have any special support of hardware devices so they must be m
   mode by use of the CLD (CLear Decimal flag) instruction. (Compare the section
   on decimal mode below.) This has to be done only once.
 
-  ## Signed Values
+## Signed Values
+
   Operations for unsigned and signed values are principally the same, the only
   difference being in how we interpret the values. Generally, the 6502 uses what
   is known as two's complement to represent negative values.
@@ -1600,10 +1523,14 @@ The 6502 does not have any special support of hardware devices so they must be m
   A dot is used to separate the high- and low-nibble, i.e. group of 4 bits.)
 
       %0000.0100     4
-  XOR %1111.1111   255
+
+XOR %1111.1111   255
   -------------
+
       %1111.1011   complement (all bits flipped)
-  +           1
+
+-           1
+
   -------------
       %1111.1100    -4, two's complement
 
@@ -1626,7 +1553,9 @@ The 6502 does not have any special support of hardware devices so they must be m
   provide the expected results:
 
     100  %0110.0100  $64
-  + -24  %1110.1000  $E8
+
+- -24  %1110.1000  $E8
+
   ---------------------
     76  %0100.1100  $4C  (+ carry)
 
@@ -1639,7 +1568,7 @@ The 6502 does not have any special support of hardware devices so they must be m
   the correction required for a valid two's complement representation or,
   if missing, results in a subtraction including a binary borrow.
 
-  ## FLags with ADC and SBC
+## FLags with ADC and SBC
 
   Besides the carry flag (C), which allows us to chain multi-byte operations, the
   CPU sets the following flags on the result of an arithmetic operation:
@@ -1669,7 +1598,8 @@ The 6502 does not have any special support of hardware devices so they must be m
   The overflow flag (V) is of interest in signed context only and has no meaning
   in unsigned context.
 
-  ## Decimal Mode (BCD)
+## Decimal Mode (BCD)
+
   Besides binary arithmetic, the 6502 processor supports a second mode, binary
   coded decimal (BCD), where each byte, rather than representing a range of 0…255,
   represents two decimal digits packed into a single byte. For this, a byte is

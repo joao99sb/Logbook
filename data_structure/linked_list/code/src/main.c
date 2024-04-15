@@ -9,7 +9,9 @@ void menu()
   printf("4) get Linked list length \n");
   printf("5) do a linear search for some element \n");
   printf("6) insert a number \n");
-  printf("7) close program \n");
+  printf("7) clean terminal \n");
+  printf("8) delete some element \n");
+  printf("9) close program \n");
 }
 
 int main(int argc, char const *argv[])
@@ -26,23 +28,21 @@ int main(int argc, char const *argv[])
     result = scanf("%d", &option);
     if (result != 1)
     {
-      printf(" invalid input!!!\n\n");
+      printf("invalid input!!!\n\n");
       while (getchar() != '\n')
       {
       };
       continue;
     }
 
-    switch (option)
+    else if (option == 1)
     {
-    case 1:
-
       printf("append a number \n");
 
       result = scanf("%d", &n);
       if (result != 1)
       {
-        printf(" invalid input!!!\n\n");
+        printf("invalid input!!!\n\n");
         while (getchar() != '\n')
         {
         };
@@ -50,12 +50,15 @@ int main(int argc, char const *argv[])
       }
 
       appendLinkedList(LL, n);
-      break;
-    case 2:
-      displayLinkedListElements(LL);
+    }
 
-      break;
-    case 3:
+    else if (option == 2)
+    {
+      displayLinkedListElements(LL);
+    }
+
+    else if (option == 3)
+    {
       printf("create your array\n");
 
       Array arr = createArray();
@@ -66,31 +69,35 @@ int main(int argc, char const *argv[])
 
       if (result != 1)
       {
-        printf(" invalid input!!!\n\n");
+        printf("invalid input!!!\n\n");
         while (getchar() != '\n')
           ;
-        break;
+        continue;
       }
 
       copyArrayElements(LL, arr.A, n, arr.length);
 
       destroyArray(&arr);
+    }
 
-      break;
-    case 4:
+    else if (option == 4)
+    {
       int LL_length = getLinkedListLength(LL);
       printf("Linked List size: %d\n", LL_length);
-      break;
-    case 5:
+    }
+
+    else if (option == 5)
+    {
       printf("put a number to search ");
 
       result = scanf("%d", &n);
       if (result != 1)
       {
-        printf(" invalid input!!!\n\n");
+        printf("invalid input!!!\n\n");
         while (getchar() != '\n')
           ;
-        break;
+        continue;
+        ;
       }
       int index = linearSearchLinkedList(LL, n);
       if (index != -1)
@@ -101,9 +108,10 @@ int main(int argc, char const *argv[])
       {
         printf("there's no key in this linked list\n");
       }
-      break;
-    case 6:
+    }
 
+    else if (option == 6)
+    {
       printf("index: ");
       result = scanf("%d", &n);
 
@@ -113,40 +121,40 @@ int main(int argc, char const *argv[])
 
       if (result != 1 || result2 != 1)
       {
-        printf(" invalid input!!!\n\n");
+        printf("invalid input!!!\n\n");
         while (getchar() != '\n')
           ;
-        break;
+        continue;
+        ;
       }
 
       insertInLinkedList(&LL, k, n);
       displayLinkedListElements(LL);
+    }
 
-      break;
-    case 7:
+    else if (option == 7)
+    {
+      printf("\033[2J\033[H");
+    }
 
+    else if (option == 8)
+    {
+      printf("index: ");
+      result = scanf("%d", &n);
+
+      deleteElementInLinkedList(&LL, n);
+    }
+    else if (option == 9)
+    {
       printf("bye bye...");
       return 0;
+    }
 
-    default:
+    else
+    {
       printf("invalid option, try again\n");
-      break;
+      continue;
     }
   }
-
-  // int A[] = {1, 2, 3, 5, 7};
-  // int array_size = sizeof(A) / sizeof(A[0]);
-  // copyArrayElements(LL, &A, 5, array_size);
-  // displayLinkedListElements(LL);
-
-  // int n;
-  // printf("append a number \n");
-  // scanf("%d", &n);
-  // appendLinkedList(LL, n);
-  // displayLinkedListElements(LL);
-
-  // int LL_length = getLinkedListLength(LL);
-  // printf("Linked List size: %d\n", LL_length);
-
   return 0;
 }

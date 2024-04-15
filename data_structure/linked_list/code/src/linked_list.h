@@ -142,6 +142,35 @@ void insertInLinkedList(Node **LL, int data, int index)
     node->next = new_node;
   }
 }
+void deleteElementInLinkedList(Node **LL, int index)
+{
+  if (index < 0 || index > getLinkedListLength(*LL) - 1)
+  {
+    printf("invalid format!!\n\n");
+    return;
+  }
+
+  Node *temp = NULL, *node;
+  node = *LL;
+  if (index == 0)
+  {
+    *LL = (*LL)->next;
+
+    free(node);
+  }
+  else
+  {
+
+    for (int i = 0; i < index - 1; i++)
+    {
+
+      node = node->next;
+    }
+    temp = node->next;
+    node->next = temp->next;
+    free(temp);
+  }
+}
 
 void displayLinkedListElements(Node *LL)
 {
