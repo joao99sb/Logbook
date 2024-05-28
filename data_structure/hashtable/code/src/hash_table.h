@@ -28,7 +28,7 @@ namespace hashTable
   template <typename T>
   List<T> *createList(int cappacity)
   {
-    List<T> *list = (List<T> *)malloc(sizeof(List<T> *) * cappacity);
+    List<T> *list = (List<T> *)malloc(sizeof(List<T>) * cappacity);
 
     list->data = (Node<T> **)malloc(sizeof(Node<T> *) * cappacity);
     list->len = cappacity;
